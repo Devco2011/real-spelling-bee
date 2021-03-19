@@ -1,28 +1,47 @@
 <template>
-  <div id="app">
-    <img alt="Vue logo" src="./assets/logo.png" />
-    <HelloWorld msg="Welcome to Your Vue.js App" />
+  <div class="container">
+    <h1>Spelling Test</h1>
+    <speech :word="questions[activeIndex].word" />
+    <form @submit.prevent="handleSubmit">
+      <input
+        type="text"
+        spellcheck="false"
+        v-model="userInput"
+        placeholder="Spell the word"
+      />
+      <button>Submit</button>
+    </form>
   </div>
 </template>
 
 <script>
-import HelloWorld from "./components/HelloWorld.vue";
+import data from "./data";
+import Speech from "./components/Speech";
 
 export default {
-  name: "App",
-  components: {
-    HelloWorld,
+  components: { Speech },
+
+  data() {
+    return {
+      questions: data,
+      activeIndex: 0,
+      userInput: "",
+    };
+  },
+  methods: {
+    handleSubmit() {
+      this.questions[this.activeIndex].userInput = this.userInput;
+      this.activeIndex += 1;
+      this.userInput = "";
+    },
+  },
+  computed: {
+    testFinished() {
+      return this.questions.every((q) => q.userInput);
+    },
   },
 };
 </script>
 
 <style>
-#app {
-  font-family: Avenir, Helvetica, Arial, sans-serif;
-  -webkit-font-smoothing: antialiased;
-  -moz-osx-font-smoothing: grayscale;
-  text-align: center;
-  color: #2c3e50;
-  margin-top: 60px;
-}
 </style>
